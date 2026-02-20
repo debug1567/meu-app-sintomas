@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Saúde Inteligente</title>
+
+<style>
+body{
+  font-family: Arial;
+  background: linear-gradient(135deg,#673ab7,#311b92);
+  display:flex;
+  justify-content:center;
+  padding:20px;
+}
+
+.container{
+  background:white;
+  padding:20px;
+  border-radius:15px;
+  width:100%;
+  max-width:450px;
+}
+
+h1{text-align:center;color:#311b92;}
+
+input,select,button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+button{
+  background:#673ab7;
+  color:white;
+  font-weight:bold;
+  border:none;
+}
+
+.result{
+  margin-top:15px;
+  background:#f5f5f5;
+  padding:15px;
+  border-radius:10px;
+}
+
+.alert{color:red;font-size:12px;}
+
+.hist{
+  margin-top:10px;
+  font-size:12px;
+  max-height:120px;
+  overflow:auto;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🧠 Saúde Inteligente</h1>
+
+<input type="number" id="idade" placeholder="Idade">
+<input type="number" id="peso" placeholder="Peso (kg)">
+
+<select id="sintoma">
+<option value="">Selecione sintomas</option>
+<option value="dorCabeca">Dor de cabeça</option>
+<option value="febre">Febre</option>
+<option value="gripe">Gripe</option>
+<option value="dorCorpo">Dor no corpo</option>
+<option value="nausea">Náusea</option>
+<option value="diarreia">Diarreia</option>
+<option value="tosse">Tosse</option>
+<option value="garganta">Dor de garganta</option>
+<option value="faltaAr">Falta de ar</option>
+<option value="estomago">Dor no estômago</option>
+<option value="vomito">Vômito</option>
+<option value="tontura">Tontura</option>
+<option value="alergia">Alergia</option>
+</select>
+
+<button onclick="avaliar()">Avaliar sintomas</button>
+
+<div id="saida" class="result"></div>
+
+<div class="hist" id="hist"></div>
+
+<div class="alert">
+⚠️ Informativo. Não substitui consulta médica.
+</div>
+
+</div>
+
+<script>
+
+let historico = JSON.parse(localStorage.getItem("hist")) || [];
+mostrarHist();
+
+function mostrarHist(){
+  document.getElementById("hist").innerHTML =
+  "<b>Histórico:</b><br>" + historico.join("<br><br>");
+}
+
+function salvar(texto){
+  historico.unshift(texto);
+  localStorage.setItem("hist", JSON.stringify(historico));
+  mostrarHist();
+}
+
+function avaliar(){
+
+const idade=parseInt(document.getElementById("idade").value);
+const peso=parseFloat(document.getElementById("peso").value);
+const sintoma=document.getElementById("sintoma").value;
+const out=document.getElementById("saida");
+
+if(!idade || !peso || !sintoma){
+  out.innerHTML="Preencha todos os campos.";
+  return;
+}
+
+let alerta="";
+let orientacao="";
+let risco="";
+
+if(idade<2){
+alerta="⚠️ Crianças menores de 2 anos devem ser avaliadas por médico.<br>";
+}
+
+if(idade>60){
+risco="⚠️ Idosos precisam de avaliação mais cuidadosa.<br>";
+}
+
+// Sintomas
+if(sintoma=="dorCabeca"){
+orientacao=`<b>Dor de cabeça</b><br>
+Paracetamol é opção inicial.<br>
+Hidratação.<br>
+Descanso.<br>
+Procurar médico se persistir.<br>`;
+}
+
+if(sintoma=="febre"){
+orientacao=`<b>Febre</b><br>
+Paracetamol conforme peso e bula.<br>
+Hidratação.<br>
+Banho morno.<br>`;
+}
+
+if(sintoma=="gripe"){
+orientacao=`<b>Gripe</b><br>
+Repouso.<br>
+Líquidos.<br>
+Paracetamol para sintomas.<br>`;
+}
+
+if(sintoma=="dorCorpo"){
+orientacao=`<b>Dor no corpo</b><br>
+Paracetamol ou Ibuprofeno.<br>
+Descanso.<br>`;
+}
+
+if(sintoma=="nausea"){
+orientacao=`<b>Náusea</b><br>
+Alimentação leve.<br>
+Hidratação.<br>`;
+}
+
+if(sintoma=="diarreia"){
+orientacao=`<b>Diarreia</b><br>
+Soro oral.<br>
+Hidratação intensa.<br>`;
+}
+
+if(sintoma=="tosse"){
+orientacao=`<b>Tosse</b><br>
+Hidratação.<br>
+Mel (>1 ano).<br>`;
+}
+
+if(sintoma=="garganta"){
+orientacao=`<b>Dor de garganta</b><br>
+Analgésicos comuns.<br>
+Pastilhas.<br>`;
+}
+
+if(sintoma=="faltaAr"){
+orientacao=`<b>⚠️ Falta de ar</b><br>
+Pode ser emergência.<br>
+Procurar atendimento imediato.<br>`;
+}
+
+if(sintoma=="estomago"){
+orientacao=`<b>Dor no estômago</b><br>
+Alimentação leve.<br>`;
+}
+
+if(sintoma=="vomito"){
+orientacao=`<b>Vômito</b><br>
+Soro oral.<br>`;
+}
+
+if(sintoma=="tontura"){
+orientacao=`<b>Tontura</b><br>
+Descanso.<br>
+Hidratação.<br>`;
+}
+
+if(sintoma=="alergia"){
+orientacao=`<b>Alergia</b><br>
+Antialérgicos comuns.<br>`;
+}
+
+let resultado = alerta + risco + orientacao;
+
+out.innerHTML = resultado;
+salvar(resultado);
+
+}
+
+</script>
+
+</body>
+</html>
